@@ -1,22 +1,8 @@
-import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
-import proxy from "express-http-proxy"
-
 dotenv.config();
 
-// Environment Variables
-const PORT = process.env.PORT;
+import init from "./frameworks/express"
 
-const app = express();
+const PORT = process.env.PORT!;
 
-app.use(cors())
-app.use(express.json());
-
-console.log(process.env.PRODUCTS_URL)
-app.get("/products", proxy(process.env.PRODUCTS_URL!));
-
-
-app.listen(PORT, () => {
-  console.log(`Main Service Running at: http://localhost:${PORT}/ 🚀`)
-});
+init(PORT);
