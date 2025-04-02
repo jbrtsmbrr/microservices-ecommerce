@@ -1,13 +1,8 @@
-export interface Product {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-}
-
-export type Conditions<T> = Partial<T>
+import { ProductDetails, ProductObject } from "../../usecases/interfaces/common";
+import { Conditions } from "./common";
 
 export interface IProductRepository {
-    findAll(): Promise<Product[]>;
-    find(params: Conditions<Product>): Promise<Product | null>;
+    findAll(): Promise<ProductObject[]>;
+    find(params: Conditions<ProductObject>): Promise<ProductObject | null>;
+    save(product: ProductDetails): Promise<ProductObject | null>;
 }
