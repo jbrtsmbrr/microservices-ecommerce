@@ -1,6 +1,8 @@
 import { Collection, ObjectId } from "mongodb";
-import { Conditions, IProductRepository, Product } from "../../application/interfaces/persistence/IProductRepository";
+import { IProductRepository, } from "../../application/interfaces/persistence/IProductRepository";
 import MongoDB from "../../frameworks/mongodb/connection";
+import { Conditions } from "../../application/interfaces/persistence/common";
+import { ProductDetails, ProductObject } from "../../application/usecases/interfaces/common";
 
 interface IProductCollection {
     _id: ObjectId;
@@ -10,7 +12,7 @@ interface IProductCollection {
 }
 
 export class ProductRepository implements IProductRepository {
-    public async find(params: Conditions<Product>): Promise<Product | null> {
+    public async find(params: Conditions<ProductObject>): Promise<ProductObject | null> {
         const connection = await MongoDB.instance();
         const db = connection.db('products-db');
         const collection: Collection<IProductCollection> = db.collection('products-collection');
@@ -27,7 +29,7 @@ export class ProductRepository implements IProductRepository {
         }
     }
 
-    public async findAll(): Promise<Product[]> {
+    public async findAll(): Promise<ProductObject[]> {
         try {
             const connection = await MongoDB.instance();
             const db = connection.db('products-db');
@@ -44,6 +46,32 @@ export class ProductRepository implements IProductRepository {
         } catch {
             console.log("error")
             return []
+        }
+    }
+
+    public async save(product: ProductDetails): Promise<ProductObject | null> {
+        const connection = await MongoDB.instance();
+        const db = connection.db('products-db');
+        const collection: Collection<IProductCollection> = db.collection('products-collection');
+
+        const result = await collection.insertOne({
+            _id: new ObjectId(),
+            ...product
+        });
+
+        if (!result.insertedId) return null;
+
+        const inserted_product = await collection.findOne({
+            _id: new ObjectId(result.insertedId)
+        });
+
+        if (inserted_product === null) return null;
+
+        return {
+            id: inserted_product._id.toString(),
+            name: inserted_product.name,
+            description: inserted_product.description,
+            price: inserted_product.price
         }
     }
 }
