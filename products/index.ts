@@ -19,8 +19,8 @@ app.use("/products", product_router);
 (async function () {
   const connection = await amqplib.connect('amqp://localhost');
   const channel = await connection.createChannel();
-  channel.assertQueue('Hello', { durable: false });
-  await channel.consume('Hello', (msg) => {
+  channel.assertQueue('ORDER_CREATED', { durable: false });
+  await channel.consume('ORDER_CREATED', (msg) => {
     console.log(`[x] Message Received: ${msg?.content?.toString()}`)
     channel.ack(msg!);
   });
