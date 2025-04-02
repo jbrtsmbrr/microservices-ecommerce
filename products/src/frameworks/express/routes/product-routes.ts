@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { all_products_controller } from "../../../adapters/controllers";
+import { all_products_controller, create_product_controller } from "../../../adapters/controllers";
 
 const product_router = Router();
 
 // Create
-product_router.post('/', async function (_, res) {
-    res.send('Product Created!')
+product_router.post('/', async function (req, res) {
+    await create_product_controller.handle(req, res)
 });
 
 // Update
