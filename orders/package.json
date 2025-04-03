@@ -12,7 +12,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@types/amqplib": "^0.10.7",
     "amqplib": "^0.10.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -20,6 +19,7 @@
     "mongodb": "^6.15.0"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.7",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/mongodb": "^4.0.6",
