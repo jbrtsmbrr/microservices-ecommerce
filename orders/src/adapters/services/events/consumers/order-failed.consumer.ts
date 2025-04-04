@@ -8,9 +8,8 @@ export default class OrderFailedConsumer implements IConsumer {
     constructor(private readonly update_order: IUpdateOrderUseCase) { }
 
     async startConsuming(/* prefetch: number ?? */) {
-        const connection = await RabbitMQ.getConnection();
-        const channel = await connection.createChannel();
-        const channel_2 = await connection.createChannel();
+        const channel = await RabbitMQ.createChannel();
+        const channel_2 = await RabbitMQ.createChannel();
 
         await channel.assertQueue('test_queue', { durable: false })
         await channel.assertExchange('ORDER_FAILED_EXCHANGE', 'fanout', { durable: false });
@@ -31,7 +30,7 @@ export default class OrderFailedConsumer implements IConsumer {
         channel.consume('test_queue', async (msg) => {
             if (!msg) return;
 
-            const { updated_entries } = await this.update_order.execute("67e946283efcc5ff1b7278e0", "FAILED");
+            // const { updated_entries } = await this.update_order.execute("67e946283efcc5ff1b7278e0", "FAILED");
 
             console.log("[x] Order Updated");
             // if (updated_entries > 0)
