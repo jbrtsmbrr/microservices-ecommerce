@@ -11,13 +11,12 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
     ) { }
 
     public async execute(order_details: PartialField<OrderDetails, 'status'>): Promise<OrderObject | null> {
-        console.log(order_details.products)
         const order = await this._order_repository.save({
             ...order_details,
             status: 'PENDING'
         });
 
-        if (true) {
+        if (!order) {
             this._publisher.publish("ORDER_FAILED", null)
             return null
         };

@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import orders_router from "./routes/orders-route";
-import { StartConsumers } from "../../adapters/services/events";
+import trackingRouter from "./routes/trackings-route";
 
 dotenv.config();
 
@@ -14,9 +14,8 @@ app.use(cors());
 
 // Routes
 app.use("/orders", orders_router);
+app.use("/trackings", trackingRouter);
 
-export default function startOrderService() {
-    app.listen(process.env.PORT, () => {
-        console.log(`[/] Order Service Running at http://localhost:${process.env.PORT}`);
-    })
-}
+app.listen(process.env.PORT, () => {
+    console.log(`[/] Order Service Running at http://localhost:${process.env.PORT}`);
+})
