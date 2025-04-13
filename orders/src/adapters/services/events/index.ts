@@ -1,6 +1,8 @@
 import { UpdateOrderUseCase } from "../../../application/use-cases/update-order.usecase";
 import "./consumers/order-successs-payment.consumer";
 import "./consumers/order-delivery.consumer";
+import "./consumers/order-pickedup.consumer";
+import "./consumers/order-delivered.consumer";
 import OrderFailedConsumer from "./consumers/order-failed.consumer";
 import { OrderRepository } from "../../persistence/OrderRepository";
 
