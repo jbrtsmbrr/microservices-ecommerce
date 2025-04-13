@@ -9,6 +9,8 @@ export type OrderStatus =
     "CANCELLED" |
     // When order is on it's way to user
     "ON_GOING_DELIVERY" |
+    // When Delivery Rider picked up the parcel
+    "ORDER_PICKEDUP" |
     // When? payment issue, inventory issue
     "FAILED" |
     // Successful
