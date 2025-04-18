@@ -6,6 +6,7 @@ import RabbitMQ from "../../../frameworks/rabbitmq/connection";
     console.log(`[x] Deliver Service ready to consume [PAYMENT_SUCCESS_EXCHANGE]`);
 
     const channel = await RabbitMQ.getChannel();
+    channel.assertExchange('PAYMENT_SUCCESS_EXCHANGE', 'fanout');
     channel.assertQueue('PAYMENT_SUCCESS_DELIVERY_QUEUE');
     channel.bindQueue('PAYMENT_SUCCESS_DELIVERY_QUEUE', 'PAYMENT_SUCCESS_EXCHANGE', '');
 
