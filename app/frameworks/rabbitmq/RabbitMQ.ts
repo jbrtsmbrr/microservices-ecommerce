@@ -8,7 +8,8 @@ class RabbitMQ {
 
     static async getConnection() {
         if (RabbitMQ.connection === null) {
-            RabbitMQ.connection = amqplib.connect('amqp://localhost');
+            const url = process.env.RABBITMQ_URL ?? 'amqp://localhost';
+            RabbitMQ.connection = amqplib.connect(url);
         }
 
         return RabbitMQ.connection;
