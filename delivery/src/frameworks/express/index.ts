@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+dotenv.config();
+
 import "../../adapters/events/consumers/payment-success.consumer";
 import delivery_router from "./delivery-routes";
-
-dotenv.config();
 
 const PORT = process.env.PORT;
 
