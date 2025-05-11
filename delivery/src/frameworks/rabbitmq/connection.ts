@@ -7,7 +7,8 @@ export default class RabbitMQ {
 
     public static async getChannel() {
         if (RabbitMQ.channel === null) {
-            const connection = await amqplib.connect('amqp://localhost');
+            const url = process.env.RABBITMQ_URL ?? 'amqp://localhost';
+            const connection = await amqplib.connect(url);
             RabbitMQ.channel = connection.createChannel();
         }
 
