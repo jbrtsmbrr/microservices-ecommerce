@@ -19,33 +19,37 @@ interface IOrderCollection {
 
 export class OrderRepository implements IOrderRepository {
     public async save(order: OrderDetails): Promise<OrderObject | null> {
-        const connection = await MongoDB.instance();
-        const db = connection.db('orders-db');
-        const collection: Collection<IOrderCollection> = db.collection('orders-collection');
+        try {
+            const connection = await MongoDB.instance();
+            const db = connection.db('orders-db');
+            const collection: Collection<IOrderCollection> = db.collection('orders-collection');
 
-        const { insertedId } = await collection.insertOne({
-            _id: new ObjectId(),
-            customer: new ObjectId(),
-            status: order.status,
-            products: order.products.map(product => ({
-                product_id: new ObjectId(product.product_id),
-                quantity: product.quantity
-            })),
-            payment_method: order.payment_method
-        });
+            const { insertedId } = await collection.insertOne({
+                _id: new ObjectId(),
+                customer: new ObjectId(),
+                status: order.status,
+                products: order.products.map(product => ({
+                    product_id: new ObjectId(product.product_id),
+                    quantity: product.quantity
+                })),
+                payment_method: order.payment_method
+            });
 
-        if (!insertedId) return null;
+            if (!insertedId) return null;
 
-        const new_order = await collection.findOne({ _id: insertedId })
+            const new_order = await collection.findOne({ _id: insertedId })
 
-        if (!new_order) return null;
+            if (!new_order) return null;
 
-        return {
-            id: new_order._id.toString(),
-            customer_id: new_order.customer.toString(),
-            status: new_order.status,
-            products: new_order.products.map(p => ({ product_id: p.product_id.toString(), quantity: p.quantity })),
-            payment_method: "Cash On Delivery"
+            return {
+                id: new_order._id.toString(),
+                customer_id: new_order.customer.toString(),
+                status: new_order.status,
+                products: new_order.products.map(p => ({ product_id: p.product_id.toString(), quantity: p.quantity })),
+                payment_method: "Cash On Delivery"
+            }
+        } catch {
+            return null
         }
     }
 
