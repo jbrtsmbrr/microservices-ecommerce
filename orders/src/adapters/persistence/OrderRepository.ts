@@ -54,38 +54,41 @@ export class OrderRepository implements IOrderRepository {
     }
 
     public async findOne(params: Partial<Omit<OrderObject, "payment_method">>): Promise<OrderObject | null> {
-        const connection = await MongoDB.instance();
-        const db = connection.db('orders-db');
-        const collection: Collection<IOrderCollection> = db.collection('orders-collection');
+        try {
+            const connection = await MongoDB.instance();
+            const db = connection.db('orders-db');
+            const collection: Collection<IOrderCollection> = db.collection('orders-collection');
 
-        const filters = Object.entries(params).reduce<Filter<IOrderCollection>>((accum, current) => {
-            const [key, value] = current;
+            const filters = Object.entries(params).reduce<Filter<IOrderCollection>>((accum, current) => {
+                const [key, value] = current;
 
-            if (key === 'id')
-                // @ts-ignore
-                accum['_id'] = new ObjectId(value);
-            else
-                accum[key] = value;
+                if (key === 'id')
+                    // @ts-ignore
+                    accum['_id'] = new ObjectId(value);
+                else
+                    accum[key] = value;
 
 
-            return accum
-        }, {})
+                return accum
+            }, {})
 
-        const order = await collection.findOne(filters);
+            const order = await collection.findOne(filters);
 
-        if (!order) return null
+            if (!order) return null
 
-        return {
-            id: order._id.toString(),
-            customer_id: order.customer.toString(),
-            products: order.products.map(o => ({
-                product_id: o.product_id.toString(),
-                quantity: o.quantity
-            })),
-            status: order.status,
-            payment_method: "Cash On Delivery"
+            return {
+                id: order._id.toString(),
+                customer_id: order.customer.toString(),
+                products: order.products.map(o => ({
+                    product_id: o.product_id.toString(),
+                    quantity: o.quantity
+                })),
+                status: order.status,
+                payment_method: "Cash On Delivery"
+            }
+        } catch {
+            return null
         }
-
     }
 
     public async updateOne(order: UpdateOrderParams): Promise<{ affected_entries: number }> {
