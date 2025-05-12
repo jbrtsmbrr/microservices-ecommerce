@@ -92,33 +92,37 @@ export class OrderRepository implements IOrderRepository {
     }
 
     public async updateOne(order: UpdateOrderParams): Promise<{ affected_entries: number }> {
-        const connection = await MongoDB.instance();
-        const db = connection.db('orders-db');
-        const collection: Collection<IOrderCollection> = db.collection('orders-collection');
+        try {
+            const connection = await MongoDB.instance();
+            const db = connection.db('orders-db');
+            const collection: Collection<IOrderCollection> = db.collection('orders-collection');
 
-        const updated_order = Object.entries(order).reduce((accum, current) => {
-            const [key, value] = current;
+            const updated_order = Object.entries(order).reduce((accum, current) => {
+                const [key, value] = current;
 
-            if (key === 'id')
-                // @ts-ignore
-                accum['_id'] = new ObjectId(value);
-            else if (key == 'customer_id')
-                // @ts-ignore
-                accum['customer'] = new ObjectId(value);
-            else if (key == 'products')
-                // @ts-ignore
-                accum['products'] = value.map(o => ({
-                    product_id: new ObjectId(o.product_id as string),
-                    quantity: o.quantity
-                }))
-            else
-                accum[key] = value;
+                if (key === 'id')
+                    // @ts-ignore
+                    accum['_id'] = new ObjectId(value);
+                else if (key == 'customer_id')
+                    // @ts-ignore
+                    accum['customer'] = new ObjectId(value);
+                else if (key == 'products')
+                    // @ts-ignore
+                    accum['products'] = value.map(o => ({
+                        product_id: new ObjectId(o.product_id as string),
+                        quantity: o.quantity
+                    }))
+                else
+                    accum[key] = value;
 
-            return accum
-        }, {} as Record<any, any>)
+                return accum
+            }, {} as Record<any, any>)
 
-        const { modifiedCount } = await collection.updateOne({ _id: new ObjectId(order.id) }, { $set: updated_order });
+            const { modifiedCount } = await collection.updateOne({ _id: new ObjectId(order.id) }, { $set: updated_order });
 
-        return { affected_entries: modifiedCount }
+            return { affected_entries: modifiedCount }
+        } catch {
+            return { affected_entries: 0 }
+        }
     }
 }
