@@ -13,6 +13,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/deliveries', delivery_router);
+app.use('/', delivery_router);
 
 app.listen(PORT, () => console.log(`Delivery Service running on http://localhost:${PORT}`))
