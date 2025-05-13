@@ -1,0 +1,57 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    healthcheck: 
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5672:5672
+      - 15692:15692
+
+  delivery:
+    build: ./delivery
+    container_name: delivery
+    ports:
+      - 4044:4044
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+        
+  gateway:
+    build: ./app
+    container_name: gateway
+    ports:
+      - 4040:4040
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+  
+  orders:
+    build: ./orders
+    container_name: orders
+    ports:
+      - 4042:4042
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  products:
+    build: ./products
+    container_name: products
+    ports:
+      - 4041:4041
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  payments:
+    build: ./payments
+    container_name: payments
+    ports:
+      - 4043:4043
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
