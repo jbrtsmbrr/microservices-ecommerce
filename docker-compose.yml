@@ -12,16 +12,6 @@ services:
       - 5672:5672
       - 15692:15692
 
-  delivery:
-    build: ./delivery
-    container_name: delivery
-    ports:
-      - 4044:4044
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-        # restart: true
-        
   gateway:
     build: ./app
     container_name: gateway
@@ -30,12 +20,40 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+
+  delivery:
+    build: ./delivery
+    container_name: delivery
+    expose:
+      - 4044
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+        # restart: true
   
   orders:
     build: ./orders
     container_name: orders
-    ports:
-      - 4042:4042
+    expose:
+      - 4042
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  products:
+    build: ./products
+    container_name: products
+    expose:
+      - 4041
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  payments:
+    build: ./payments
+    container_name: payments
+    expose:
+      - 4043
     depends_on:
       rabbitmq:
         condition: service_healthy
