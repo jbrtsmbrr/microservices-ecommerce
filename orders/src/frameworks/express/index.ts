@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use("/orders", orders_router);
+app.use("/", orders_router);
 app.use("/trackings", trackingRouter);
 
 app.listen(process.env.PORT, () => {
