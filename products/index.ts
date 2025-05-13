@@ -11,20 +11,11 @@ const PORT = process.env.PORT;
 const app = express();
 
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+  origin: process.env.ENV_MODE === "production" ? process.env.GATEWAY_URL : "*"
+}))
 
-app.use("/products", product_router);
-
-
-(async function () {
-  const connection = await amqplib.connect('amqp://localhost');
-  const channel = await connection.createChannel();
-  channel.assertQueue('ORDER_CREATED', { durable: false });
-  await channel.consume('ORDER_CREATED', (msg) => {
-    console.log(`[x] Message Received: ${msg?.content?.toString()}`)
-    channel.ack(msg!);
-  });
-})()
+app.use("/", product_router);
 
 app.listen(PORT, () => {
   console.log(`Product Service Running at: http://localhost:${PORT}/ 🚀`)
