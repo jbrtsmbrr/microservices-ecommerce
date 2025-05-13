@@ -8,7 +8,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.all("/products", proxy(process.env.PRODUCTS_URL!));
+app.use("/products", proxy(process.env.PRODUCTS_API_URL!));
+app.use("/orders", proxy(process.env.ORDERS_API_URL!));
+app.use("/delivery", proxy(process.env.DELIVERY_API_URL!));
 
 app.use('/queue-message', async (_, res) => {
     let connection = await RabbitMQ.getConnection();
