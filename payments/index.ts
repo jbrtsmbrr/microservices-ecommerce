@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import "./adapters/events/order-created.consumer"
-
 dotenv.config();
+
+import "./adapters/events/order-created.consumer"
 
 const app = express();
 
